@@ -23,6 +23,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Run Audit
+        run: npm audit
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: npm run e2e
+
       - name: Run Build
         run: npm run build
 

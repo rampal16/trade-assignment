@@ -12,7 +12,12 @@ const config: Config = {
       '<rootDir>/test/mocks/fileMock.js',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/dist/',
+    '/tests/',
+    '/test-examples/',
+  ],
   transformIgnorePatterns: ['/node_modules/'],
 };
 
