@@ -1,0 +1,27 @@
+name: Continuous Integration
+on:
+  push:
+  pull_request:
+   
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.9.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linters
+        run: npm run lint
+
+      - name: Run formatters
+        run: npm run format
