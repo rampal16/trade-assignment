@@ -16,3 +16,8 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+
+.gridDetail {
+  height: 600px;
+  width: 100%;
+}
