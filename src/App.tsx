@@ -9,6 +9,7 @@ import { tradeRows } from './utils/constants';
 
 import './App.css';
 import type { IAppContext, IAppState } from './utils/types';
+import TradeDetail from './components/container/TradeDetail';
 
 const App = () => {
   const [appState, setAppState] = useState<IAppState>({ trades: tradeRows });
@@ -33,6 +34,10 @@ const App = () => {
           <Routes>
             <Route path="/trade-assignment/" element={<Dashboard />} />
             <Route path="/trade-assignment/trades" element={<Trades />} />
+            <Route
+              path="/trade-assignment/trades/:id"
+              element={<TradeDetail />}
+            />
             <Route path="/trade-assignment/about" element={<About />} />
           </Routes>
         </AppContext.Provider>

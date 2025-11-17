@@ -1,3 +1,5 @@
+import type { TradeDetail } from './types';
+
 export const formateDate = (date?: Date): string => {
   // Create a new Date object representing the current date and time
   let today: Date;
@@ -20,4 +22,26 @@ export const formateDate = (date?: Date): string => {
   // You can also format it as a string
   //return `${month}/${day}/${year}`;
   return `${year}-${month}-${day}`;
+};
+
+export const resetHours = (today: Date) => {
+  today.setHours(0, 0, 0, 0);
+  return today;
+};
+
+export const isValidTradeVersion = (
+  trades: TradeDetail[],
+  tradeId: string,
+  version: string
+) => {
+  const existingTrades = trades.filter((trade) => trade.tradeId === tradeId);
+  if (existingTrades) {
+    existingTrades.forEach((existingTrade) => {
+      if (version < existingTrade.version) {
+        return false;
+      }
+    });
+  }
+
+  return true;
 };

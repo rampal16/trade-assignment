@@ -1,49 +1,5 @@
 import { formateDate } from './helper';
-import { type GridColDef } from '@mui/x-data-grid';
 import type { TradeDetail } from './types';
-
-export const tradeColumns: GridColDef<(typeof tradeRows)[number]>[] = [
-  { field: 'id', headerName: 'Id', width: 50 },
-  { field: 'tradeId', headerName: 'Trade Id', width: 90 },
-  {
-    field: 'version',
-    headerName: 'Version',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'counterPartyId',
-    headerName: 'Counter Party Id',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'bookId',
-    headerName: 'Book Id',
-    width: 110,
-    editable: true,
-  },
-  {
-    field: 'muturityDate',
-    headerName: 'Maturity Date',
-    type: 'date',
-    width: 160,
-    editable: true,
-  },
-  {
-    field: 'createdDate',
-    headerName: 'Created Date',
-    type: 'date',
-    width: 160,
-    editable: true,
-  },
-  {
-    field: 'expired',
-    headerName: 'Expired',
-    width: 160,
-    editable: true,
-  },
-];
 
 export const tradeRows: TradeDetail[] = [
   {
@@ -87,3 +43,21 @@ export const tradeRows: TradeDetail[] = [
     expired: 'Y',
   },
 ];
+
+export const TRADE_DEFAULT_VALUES: TradeDetail = {
+  tradeId: '',
+  version: '',
+  counterPartyId: '',
+  bookId: '',
+  muturityDate: null,
+  createdDate: null,
+  expired: '',
+};
+
+export enum OperationType {
+  ADD = 'ADD',
+  UPDATE = 'UPDATE',
+}
+
+export const CONFIRM_DELETE_MESSAGE =
+  'Are you sure you want to delete this trade?';

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Box } from '@mui/material';
@@ -5,7 +6,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import type { TradeDetail } from '../../utils/types';
+import { TRADE_DEFAULT_VALUES, OperationType } from '../../utils/constants';
+import { resetHours } from '../../utils/helper';
 
 const style = {
   position: 'absolute',
@@ -20,38 +25,81 @@ const style = {
 };
 
 interface TradeModalProps {
+  trade?: TradeDetail;
   isOpen: boolean;
   handleClose?: () => void;
-  submit: (data: TradeDetail) => void;
+  submit: (operationType: OperationType, data: TradeDetail) => void;
 }
 
-const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
+const tradeModelSchema = yup.object({
+  tradeId: yup.string().required('TradeId is required.'),
+  version: yup.string().required('Version is required.'),
+  counterPartyId: yup.string().required('CounterPartyId is required.'),
+  bookId: yup.string().required('BookId is required.'),
+  muturityDate: yup
+    .date()
+    .nullable()
+    .default(null)
+    .min(
+      resetHours(new Date()),
+      'Maturity Date cannot be earlier than current date.'
+    )
+    .test('muturityDate', 'Muturity Date is required.', (value) => {
+      if (!value) return false;
+
+      return true;
+    }),
+  createdDate: yup
+    .date()
+    .nullable()
+    .default(null)
+    .test('createdDate', 'Created Date is required.', (value) => {
+      if (!value) return false;
+
+      return true;
+    }),
+  expired: yup.string().required('Expired is required.'),
+});
+
+const TradeModal = ({
+  trade,
+  isOpen,
+  handleClose,
+  submit,
+}: TradeModalProps) => {
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      tradeId: '',
-      version: '',
-      counterPartyId: '',
-      bookId: '',
-      muturityDate: null,
-      createdDate: null,
-      expired: '',
-    },
+    defaultValues: TRADE_DEFAULT_VALUES,
+    resolver: yupResolver(tradeModelSchema),
   });
 
+  useEffect(() => {
+    if (trade) reset(trade);
+  }, [trade, reset]);
+
   const onSubmit = (data: TradeDetail) => {
-    reset();
-    submit(data);
+    reset(TRADE_DEFAULT_VALUES);
+    if (trade && trade.id) {
+      submit(OperationType.UPDATE, data);
+    } else {
+      submit(OperationType.ADD, data);
+    }
   };
+
+  const onHandleClose = () => {
+    reset(TRADE_DEFAULT_VALUES);
+    if (handleClose) handleClose();
+  };
+
   return (
     <div>
       <Modal
         open={isOpen}
-        onClose={handleClose}
+        onClose={onHandleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -70,12 +118,13 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
             >
               <Controller
                 name="tradeId"
+                defaultValue=""
                 control={control}
-                rules={{ required: 'TradeId is required' }}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     label="Trade Id"
+                    size="small"
                     variant="outlined"
                     error={!!errors.tradeId}
                     helperText={errors.tradeId?.message}
@@ -85,12 +134,13 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
 
               <Controller
                 name="version"
+                defaultValue=""
                 control={control}
-                rules={{ required: 'Version is required' }}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     label="Version"
+                    size="small"
                     variant="outlined"
                     error={!!errors.version}
                     helperText={errors.version?.message}
@@ -100,12 +150,13 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
 
               <Controller
                 name="counterPartyId"
+                defaultValue=""
                 control={control}
-                rules={{ required: 'CounterParty Id is required' }}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     label="CounterParty Id"
+                    size="small"
                     variant="outlined"
                     error={!!errors.counterPartyId}
                     helperText={errors.counterPartyId?.message}
@@ -115,12 +166,13 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
 
               <Controller
                 name="bookId"
+                defaultValue=""
                 control={control}
-                rules={{ required: 'BookId is required' }}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     label="Book Id"
+                    size="small"
                     variant="outlined"
                     error={!!errors.bookId}
                     helperText={errors.bookId?.message}
@@ -130,8 +182,8 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
 
               <Controller
                 name="muturityDate"
+                defaultValue={null}
                 control={control}
-                rules={{ required: 'Muturity Date is required' }}
                 render={({ field }) => (
                   <DatePicker
                     label="Muturity Date"
@@ -142,6 +194,7 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
                     slotProps={{
                       textField: {
                         variant: 'outlined',
+                        size: 'small',
                         error: !!errors.muturityDate,
                         helperText: errors.muturityDate?.message,
                       },
@@ -152,8 +205,8 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
 
               <Controller
                 name="createdDate"
+                defaultValue={null}
                 control={control}
-                rules={{ required: 'Created Date is required' }}
                 render={({ field }) => (
                   <DatePicker
                     label="Created Date"
@@ -164,6 +217,7 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
                     slotProps={{
                       textField: {
                         variant: 'outlined',
+                        size: 'small',
                         error: !!errors.createdDate,
                         helperText: errors.createdDate?.message,
                       },
@@ -174,12 +228,13 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
 
               <Controller
                 name="expired"
+                defaultValue=""
                 control={control}
-                rules={{ required: 'Expired Field is required' }}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     label="Expired"
+                    size="small"
                     variant="outlined"
                     error={!!errors.expired}
                     helperText={errors.expired?.message}
@@ -188,7 +243,7 @@ const TradeModal = ({ isOpen, handleClose, submit }: TradeModalProps) => {
               />
 
               <Button type="submit" variant="contained">
-                Save
+                {trade?.id ? 'Update' : 'Save'}
               </Button>
             </Box>
           </LocalizationProvider>

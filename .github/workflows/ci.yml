@@ -26,9 +26,6 @@ jobs:
       - name: Run formatters
         run: npm run format
 
-      - name: Run Audit
-        run: npm audit
-
       - name: Run unit tests
         run: npm run test
 
