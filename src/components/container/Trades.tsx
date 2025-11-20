@@ -128,6 +128,7 @@ const Trades = () => {
 
   return (
     <div>
+      <h3>Trade List</h3>
       <Button
         size="small"
         onClick={() => {

@@ -187,6 +187,7 @@ const TradeModal = ({
                 render={({ field }) => (
                   <DatePicker
                     label="Muturity Date"
+                    data-testid="date-picker-muturity-date"
                     value={field.value ? dayjs(field.value) : null} // Convert to dayjs object for DatePicker
                     onChange={(newValue) =>
                       field.onChange(newValue ? newValue.toDate() : null)
@@ -210,6 +211,7 @@ const TradeModal = ({
                 render={({ field }) => (
                   <DatePicker
                     label="Created Date"
+                    data-testid="date-picker-created-date"
                     value={field.value ? dayjs(field.value) : null} // Convert to dayjs object for DatePicker
                     onChange={(newValue) =>
                       field.onChange(newValue ? newValue.toDate() : null)

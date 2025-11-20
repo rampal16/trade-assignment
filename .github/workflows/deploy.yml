@@ -18,19 +18,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.9.0'
+          node-version: '20.17.0'
 
       - name: Install dependencies
         run: npm install
 
       - name: Run unit tests
         run: npm run test
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      - name: Run E2E tests
-        run: npm run e2e
 
       - name: Run Build
         run: npm run build

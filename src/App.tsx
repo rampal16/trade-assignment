@@ -9,7 +9,7 @@ import { tradeRows } from './utils/constants';
 
 import './App.css';
 import type { IAppContext, IAppState } from './utils/types';
-import TradeDetail from './components/container/TradeDetail';
+import TradeDetail from './components/common/TradeDetail';
 
 const App = () => {
   const [appState, setAppState] = useState<IAppState>({ trades: tradeRows });
